@@ -2,10 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { EmailTemplate } from "@/components/emailTemplate";
 import { Resend } from "resend";
 import {z} from 'zod';
+import { format } from "date-fns";
+import prisma from "@/prisma/prisma";
+import { Prisma } from "@prisma/client";
 
-const schema = z.object({
-    brideName: z.string(),
-    groomName: z.string(),         
+const formSchema = z.object({
+  brideName: z.string().min(2).max(50),
+  groomName: z.string().min(2).max(50),
+  email: z.string().email("Email address not valid!"),
+  weddingDate: z.string(),
+  songsOptions: z.string(),
+  highlightSong: z.string().optional(),
+  videoSongs: z.string().optional(),
+  details: z.string(),
+  address: z.string(),
+  city: z.string(),
+  state: z.string(),
+  zipCode: z.string(),
 })
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -13,7 +26,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export const POST = async (request: NextRequest) =>{
     const rawBody = await request.json();
 
-    const response = schema.safeParse(rawBody);
+    const response = formSchema.safeParse(rawBody);
 
     if (!response.success) {
         const { errors } = response.error;
@@ -21,7 +34,33 @@ export const POST = async (request: NextRequest) =>{
         return NextResponse.json(errors, {status: 401})
     }
 
+    try{
+      const newQuestionnare = await prisma.video.create({
+        data: {
+          brideName: response.data.brideName,
+          groomName: response.data.groomName,
+          email: response.data.email,
+          weddingDate: response.data.weddingDate,
+          songsOptions: response.data.songsOptions,
+          highlightSong: response?.data.highlightSong,
+          videoSongs: response?.data.videoSongs,
+          details: response.data.details,
+          address: response.data.address,
+          city: response.data.city,
+          state: response.data.state,
+          zipCode: response.data.zipCode,
+        }
+      })
 
+      return NextResponse.json(newQuestionnare, {status: 201})
+    }
+    catch(e){
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        throw e
+    }
+  }
+    
+    /** 
     try {
         const { data, error } = await resend.emails.send({
           from: 'Acme <office@redbarnweddingstudio.xyz>',
@@ -38,5 +77,6 @@ export const POST = async (request: NextRequest) =>{
       } catch (error) {
         return NextResponse.json({ error }, { status: 500 });
       }
-}
+      */
 
+}

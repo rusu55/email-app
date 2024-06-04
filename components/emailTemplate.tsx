@@ -1,4 +1,20 @@
 import * as React from "react";
+import {
+  Body,
+  Column,
+  Container,
+  Head,
+  Heading,
+  Hr,
+  Html,
+  Img,
+  Link,
+  Preview,
+  Section,
+  Text,
+  Row,
+} from "@react-email/components";
+
 interface EmailTemplateProps {
   brideName: string;
   groomName: string;
@@ -9,18 +25,14 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
   groomName,
 }) => {
   return (
-    <div>
-      <h1>Video Questionnaire</h1>
-      <div>
-        <p className=" font-bold text-lg">
-          Bride Name:{" "}
-          <span className=" text-base font-semibold">{` ${brideName}`}</span>
-        </p>
-        <p className=" font-bold text-lg">
-          Groom Name:{" "}
-          <span className=" text-base font-semibold">{` ${groomName}`}</span>
-        </p>
-      </div>
-    </div>
+   <Html>
+      <Head />
+      <Preview>Stack overflow tips for searching</Preview>
+      <Body>
+        <Container>
+          
+        </Container>
+      </Body>
+   </Html>
   );
 };

@@ -9,6 +9,16 @@ import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import { Loader2 } from "lucide-react";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from "@/components/ui/select";
+
+import states from 'states-us';
 
 import {
     Card,
@@ -68,7 +78,7 @@ export const EmailForm = ({onSubmit, disabled}: Props) => {
     })
 
  const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log('aaaaaaaaaaaaaaaa')
+    onSubmit(values)
  }
 
   return (
@@ -171,7 +181,7 @@ export const EmailForm = ({onSubmit, disabled}: Props) => {
                                     />
                                     </PopoverContent>
                                 </Popover>
-                                <FormMessage />
+                                
                                 </FormItem>
                             )}
                             />  
@@ -194,7 +204,7 @@ export const EmailForm = ({onSubmit, disabled}: Props) => {
                                 >
                                 <FormItem className="flex items-center space-x-3 space-y-0">
                                     <FormControl>
-                                    <RadioGroupItem value="all" />
+                                    <RadioGroupItem value="Bride Songs Selection" />
                                     </FormControl>
                                     <FormLabel className="font-normal">                      
                                             Yes, I would like you to choose the songs for my video
@@ -202,7 +212,7 @@ export const EmailForm = ({onSubmit, disabled}: Props) => {
                                 </FormItem>
                                 <FormItem className="flex items-center space-x-3 space-y-0">
                                     <FormControl>
-                                    <RadioGroupItem value="mentions" />
+                                    <RadioGroupItem value="Red Barn Song Selection" />
                                     </FormControl>
                                     <FormLabel className="font-normal">
                                             No, please see the songs we have chose bellow
@@ -211,7 +221,6 @@ export const EmailForm = ({onSubmit, disabled}: Props) => {
                                 
                                 </RadioGroup>
                             </FormControl>
-                            <FormMessage />
                             </FormItem>
                         )}
                         />
@@ -244,7 +253,6 @@ export const EmailForm = ({onSubmit, disabled}: Props) => {
                                     {...field}
                                     />
                                 </FormControl>                               
-                                <FormMessage />
                                 </FormItem>
                             )}
                             />
@@ -260,11 +268,84 @@ export const EmailForm = ({onSubmit, disabled}: Props) => {
                                             {...field}
                                             />
                                         </FormControl>                               
-                                        <FormMessage />
                                         </FormItem>
                                     )}
                             />
-                    <Button disabled={disabled}>Send Video Questionnaire</Button>
+                            <FormField 
+                                control={form.control}
+                                name="address"
+                                render={({field})=>(
+                                    <FormItem className="w-full">
+                                        <FormLabel>Address:</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                disabled={disabled}
+                                                placeholder=""
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="flex gap-2">
+                                <FormField 
+                                    control={form.control}
+                                    name="city"
+                                    render={({field})=>(
+                                        <FormItem className="w-[60%]">
+                                            <FormLabel>City:</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    disabled={disabled}
+                                                    placeholder=""
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                 <FormField
+                                    control={form.control}
+                                    name="state"
+                                    render={({ field }) => (
+                                        <FormItem  className="w-[20%]">
+                                        <FormLabel>Email</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="State..." />
+                                            </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {states.map((state, index) =>(
+                                                        <SelectItem key={index} value={state.abbreviation}>
+                                                               {state.name + ", "+ state.abbreviation}
+                                                        </SelectItem>
+                                                ))}                                           
+                                           
+                                            </SelectContent>
+                                        </Select>                                        
+                                        </FormItem>
+                                    )}
+                                    />
+                                 <FormField 
+                                    control={form.control}
+                                    name="zipCode"
+                                    render={({field})=>(
+                                        <FormItem className="w-[20%]">
+                                            <FormLabel>Zip Code:</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    disabled={disabled}
+                                                    placeholder=""
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                    <Button disabled={disabled}>{disabled && <Loader2 className="size-8 animate-spin text-slate-400 p-1"/>}Send Video Questionnaire</Button>
                 </form>
             </Form>
         </CardContent>
