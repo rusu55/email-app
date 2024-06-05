@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { EmailTemplate } from "@/components/emailTemplate";
+import { VideoQuestionnaire } from "@/components/video-questionnaire";
+import { EmailTemplate } from "@/components/email-template";
 import { Resend } from "resend";
 import {z} from 'zod';
 import { format } from "date-fns";
@@ -60,14 +61,26 @@ export const POST = async (request: NextRequest) =>{
     }
   }
     
-    /** 
+    
     try {
+       
         const { data, error } = await resend.emails.send({
-          from: 'Acme <office@redbarnweddingstudio.xyz>',
+          from: 'Video Questionnaire <office@redbarnweddingstudio.xyz>',
           to: ['rusu55@yahoo.com'],
-          subject: "Hello world",
-          react: EmailTemplate({ brideName: response.data.brideName, groomName: response.data.groomName }) as React.ReactElement,
-        });
+          subject: `Video Questionnaire - ${response.data.brideName} , ${response.data.groomName} - ${response.data.weddingDate}`,
+          react: VideoQuestionnaire({
+             brideName: response.data.brideName,
+             groomName: response.data.groomName,
+             weddingDate: response.data.weddingDate,
+             songsOptions: response.data.songsOptions,
+             highlightSong: response.data.highlightSong,
+             videoSongs: response.data.videoSongs,
+             details: response.data.details,
+             address: response.data.address,
+             city: response.data.city,
+             zipCode: response.data.zipCode,
+              }),
+            });
     
         if (error) {
           return NextResponse.json({ error }, { status: 500 });
@@ -77,6 +90,4 @@ export const POST = async (request: NextRequest) =>{
       } catch (error) {
         return NextResponse.json({ error }, { status: 500 });
       }
-      */
-
 }
