@@ -53,41 +53,38 @@ export const POST = async (request: NextRequest) =>{
         }
       })
 
-      return NextResponse.json(newQuestionnare, {status: 201})
+          try {
+          
+            const { data, error } = await resend.emails.send({
+              from: 'Video Questionnaire <office@redbarnweddingstudio.xyz>',
+              to: ['rusu55@yahoo.com'],
+              subject: `Video Questionnaire - ${response.data.brideName} , ${response.data.groomName} - ${response.data.weddingDate}`,
+              react: VideoQuestionnaire({
+                brideName: response.data.brideName,
+                groomName: response.data.groomName,
+                weddingDate: response.data.weddingDate,
+                songsOptions: response.data.songsOptions,
+                highlightSong: response.data.highlightSong,
+                videoSongs: response.data.videoSongs,
+                details: response.data.details,
+                address: response.data.address,
+                city: response.data.city,
+                zipCode: response.data.zipCode,
+                  }),
+                });
+        
+            if (error) {
+              return NextResponse.json({ error }, { status: 500 });
+            }        
+            return NextResponse.json({ data }, {status: 201});
+            } catch (error) {
+              return NextResponse.json({ error }, { status: 500 });
+            }     
     }
     catch(e){
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
         throw e
     }
-  }
-    
-    
-    try {
-       
-        const { data, error } = await resend.emails.send({
-          from: 'Video Questionnaire <office@redbarnweddingstudio.xyz>',
-          to: ['rusu55@yahoo.com'],
-          subject: `Video Questionnaire - ${response.data.brideName} , ${response.data.groomName} - ${response.data.weddingDate}`,
-          react: VideoQuestionnaire({
-             brideName: response.data.brideName,
-             groomName: response.data.groomName,
-             weddingDate: response.data.weddingDate,
-             songsOptions: response.data.songsOptions,
-             highlightSong: response.data.highlightSong,
-             videoSongs: response.data.videoSongs,
-             details: response.data.details,
-             address: response.data.address,
-             city: response.data.city,
-             zipCode: response.data.zipCode,
-              }),
-            });
-    
-        if (error) {
-          return NextResponse.json({ error }, { status: 500 });
-        }
-    
-        return NextResponse.json({ data });
-      } catch (error) {
-        return NextResponse.json({ error }, { status: 500 });
-      }
+  }   
+   
 }
