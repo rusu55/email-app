@@ -25,7 +25,9 @@ const EmailPage = () => {
           description: "The Web Form was sent succesfull!",
         });
       })
-      .finally(() => {});
+      .finally(() => {
+        isLoading(false);
+      });
   };
   return (
     <div className="w-full flex items-center justify-center">
